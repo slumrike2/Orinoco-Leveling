@@ -140,12 +140,16 @@ class _BarChartWidget extends StatelessWidget {
       begin: Alignment.bottomCenter,
       end: Alignment.topCenter,
     );
+    final double minY =
+        (data.reduce((a, b) => a < b ? a : b) * 0.95).floorToDouble();
+    final double maxY =
+        (data.reduce((a, b) => a > b ? a : b) * 1.05).ceilToDouble();
     return BarChart(
       BarChartData(
         alignment: BarChartAlignment.spaceAround,
         barTouchData: BarTouchData(enabled: false),
-        minY: 5,
-        maxY: 70,
+        minY: minY,
+        maxY: maxY == minY ? minY + 1 : maxY,
         titlesData: FlTitlesData(
           leftTitles: AxisTitles(
             sideTitles: SideTitles(
@@ -337,10 +341,14 @@ class _LineChartWidget extends StatelessWidget {
       begin: Alignment.centerLeft,
       end: Alignment.centerRight,
     );
+    final double minY =
+        (data.reduce((a, b) => a < b ? a : b) * 0.95).floorToDouble();
+    final double maxY =
+        (data.reduce((a, b) => a > b ? a : b) * 1.05).ceilToDouble();
     return LineChart(
       LineChartData(
-        minY: 5,
-        maxY: 70,
+        minY: minY,
+        maxY: maxY == minY ? minY + 1 : maxY,
 
         gridData: FlGridData(
           show: true,

@@ -182,11 +182,16 @@ class _MultiBarChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final allValues = dataSets.expand((e) => e);
+    final double minY =
+        (allValues.reduce((a, b) => a < b ? a : b) * 0.95).floorToDouble();
+    final double maxY =
+        (allValues.reduce((a, b) => a > b ? a : b) * 1.05).ceilToDouble();
     return BarChart(
       BarChartData(
         alignment: BarChartAlignment.spaceAround,
-        minY: 0,
-        maxY: dataSets.expand((e) => e).reduce((a, b) => a > b ? a : b) * 1.2,
+        minY: minY,
+        maxY: maxY == minY ? minY + 1 : maxY,
         barTouchData: BarTouchData(enabled: true),
         gridData: FlGridData(
           show: true,
@@ -281,10 +286,15 @@ class _MultiLineChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final allValues = dataSets.expand((e) => e);
+    final double minY =
+        (allValues.reduce((a, b) => a < b ? a : b) * 0.95).floorToDouble();
+    final double maxY =
+        (allValues.reduce((a, b) => a > b ? a : b) * 1.05).ceilToDouble();
     return LineChart(
       LineChartData(
-        minY: 0,
-        maxY: dataSets.expand((e) => e).reduce((a, b) => a > b ? a : b) * 1.2,
+        minY: minY,
+        maxY: maxY == minY ? minY + 1 : maxY,
         gridData: FlGridData(
           show: true,
           drawVerticalLine: true,

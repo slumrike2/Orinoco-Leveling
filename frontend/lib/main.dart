@@ -1,15 +1,11 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:frontend/orinoco_api.dart';
 import 'csv_upload_dialog.dart';
 import 'hover_label.dart';
 import 'location_stats_dialog.dart';
-<<<<<<< HEAD
-import 'dart:ui';
-import 'orinoco_api.dart';
-=======
 import 'general_stats_dialog.dart';
 // <-- Add this line
->>>>>>> 4c5bbb538dfac78220d7aa6b6c4e2a8b24176ee9
 
 void main() {
   runApp(const MainApp());
@@ -39,32 +35,80 @@ class _MapScreenState extends State<MapScreen> {
   bool _hoverPalua = false;
   Map<String, dynamic>? _predictionResult;
 
+  // Helper to extract week data for a location
+  List<double> _getWeekDataForLocation(String locationKey) {
+    if (_predictionResult == null) return [10, 20, 35, 30, 50, 60, 50];
+    final preds = _predictionResult!["7_day_prediction"] as List<dynamic>?;
+    if (preds == null) return [10, 20, 35, 30, 50, 60, 50];
+    return preds
+        .map((e) => (e[locationKey] as num?)?.toDouble() ?? 0.0)
+        .toList();
+  }
+
+  // Helper to extract week days (e.g. 'Lun', 'Mar', ...) or dates
+  List<String> _getWeekLabels() {
+    if (_predictionResult == null) {
+      return ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
+    }
+    final preds = _predictionResult!["7_day_prediction"] as List<dynamic>?;
+    if (preds == null) return ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
+    return preds.map((e) {
+      final dateStr = e['date'] as String?;
+      if (dateStr == null) return '';
+      final date = DateTime.tryParse(dateStr);
+      if (date == null) return dateStr;
+      // Get weekday short name in Spanish
+      const days = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
+      return days[date.weekday % 7] +
+          '\n' +
+          dateStr.substring(5); // e.g. Lun\n06-01
+    }).toList();
+  }
+
+  // Helper to extract all rivers' data for general stats
+  List<List<double>> _getAllRiversData() {
+    if (_predictionResult == null) {
+      return [
+        [10, 20, 30, 40, 50, 60, 30],
+        [8, 15, 25, 35, 45, 55, 25],
+        [12, 18, 28, 38, 48, 58, 28],
+        [5, 10, 20, 30, 40, 50, 20],
+      ];
+    }
+    final preds = _predictionResult!["7_day_prediction"] as List<dynamic>?;
+    if (preds == null)
+      return [
+        [10, 20, 30, 40, 50, 60, 30],
+        [8, 15, 25, 35, 45, 55, 25],
+        [12, 18, 28, 38, 48, 58, 28],
+        [5, 10, 20, 30, 40, 50, 20],
+      ];
+    List<String> keys = ['ayacucho', 'caicara', 'ciudad_bolivar', 'palua'];
+    return keys
+        .map(
+          (k) => preds.map((e) => (e[k] as num?)?.toDouble() ?? 0.0).toList(),
+        )
+        .toList();
+  }
+
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      showDialog(
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final result = await showDialog<Map<String, dynamic>>(
         context: context,
         barrierDismissible: false,
         builder:
             (context) => CsvUploadDialog(
-              onFileSelected: (filePath) async {
-                if (filePath != null) {
-                  try {
-                    final api = OrinocoApi();
-                    final file = File(filePath);
-                    final result = await api.predictCsv(file);
-                    setState(() {
-                      _predictionResult = result;
-                    });
-                    print('Prediction result: $result');
-                  } catch (e) {
-                    print('Error: $e');
-                  }
-                }
-              },
+              onFileSelected: (_) {}, // No-op, all logic is in the dialog now
             ),
       );
+      // Only proceed if result is not null (valid CSV)
+      if (result != null) {
+        setState(() {
+          _predictionResult = result;
+        });
+      }
     });
   }
 
@@ -131,42 +175,24 @@ class _MapScreenState extends State<MapScreen> {
                     onExit: (_) => (pin['onExit'] as void Function())(),
                     child: GestureDetector(
                       onTap: () {
-                        // Example: Pass prediction data to dialog if available
+                        // Map pin label to API key
+                        final label = pin['label'] as String;
+                        String key = '';
+                        if (label.contains('AYACUCHO'))
+                          key = 'ayacucho';
+                        else if (label.contains('CAICARA'))
+                          key = 'caicara';
+                        else if (label.contains('BOLÍVAR'))
+                          key = 'ciudad_bolivar';
+                        else if (label.contains('PALÚA'))
+                          key = 'palua';
                         showDialog(
                           context: context,
                           builder:
                               (context) => LocationStatsDialog(
-                                location: pin['label'] as String,
-                                weekData:
-                                    _predictionResult != null
-                                        ? List<double>.from(
-                                          _predictionResult!['weekData'] ??
-                                              [10, 20, 35, 30, 50, 60, 50],
-                                        )
-                                        : [10, 20, 35, 30, 50, 60, 50],
-                                weekDays:
-                                    _predictionResult != null
-                                        ? List<String>.from(
-                                          _predictionResult!['weekDays'] ??
-                                              [
-                                                'Lun',
-                                                'Mar',
-                                                'Mié',
-                                                'Jue',
-                                                'Vie',
-                                                'Sáb',
-                                                'Dom',
-                                              ],
-                                        )
-                                        : [
-                                          'Lun',
-                                          'Mar',
-                                          'Mié',
-                                          'Jue',
-                                          'Vie',
-                                          'Sáb',
-                                          'Dom',
-                                        ],
+                                location: label,
+                                weekData: _getWeekDataForLocation(key),
+                                weekDays: _getWeekLabels(),
                               ),
                         );
                       },
@@ -197,27 +223,9 @@ class _MapScreenState extends State<MapScreen> {
                       context: context,
                       builder:
                           (context) => GeneralStatsDialog(
-                            barDataSets: [
-                              [10, 20, 30, 40, 50, 60, 30], // Ejemplo 1
-                              [8, 15, 25, 35, 45, 55, 25], // Ejemplo 2
-                              [12, 18, 28, 38, 48, 58, 28], // Ejemplo 3
-                              [5, 10, 20, 30, 40, 50, 20], // Ejemplo 4
-                            ],
-                            lineDataSets: [
-                              [10, 20, 30, 40, 50, 60, 30],
-                              [8, 15, 25, 35, 45, 55, 25],
-                              [12, 18, 28, 38, 48, 58, 28],
-                              [5, 10, 20, 30, 40, 50, 20],
-                            ],
-                            labels: [
-                              'Lun',
-                              'Mar',
-                              'Mié',
-                              'Jue',
-                              'Vie',
-                              'Sáb',
-                              'Dom',
-                            ],
+                            barDataSets: _getAllRiversData(),
+                            lineDataSets: _getAllRiversData(),
+                            labels: _getWeekLabels(),
                             barNames: [
                               'Puerto Ayacucho',
                               'Caicara',

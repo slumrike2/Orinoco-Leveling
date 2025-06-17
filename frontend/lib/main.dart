@@ -1,9 +1,11 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'csv_upload_dialog.dart';
 import 'hover_label.dart';
 import 'location_stats_dialog.dart';
-import 'dart:ui'; // <-- Add this line
+import 'dart:ui';
+import 'orinoco_api.dart';
 
 void main() {
   runApp(const MainApp());
@@ -31,6 +33,7 @@ class _MapScreenState extends State<MapScreen> {
   bool _hoverCaicara = false;
   bool _hoverBolivar = false;
   bool _hoverPalua = false;
+  Map<String, dynamic>? _predictionResult;
 
   @override
   void initState() {
@@ -41,8 +44,20 @@ class _MapScreenState extends State<MapScreen> {
         barrierDismissible: false,
         builder:
             (context) => CsvUploadDialog(
-              onFileSelected: (filePath) {
-                // Aquí puedes manejar el archivo seleccionado
+              onFileSelected: (filePath) async {
+                if (filePath != null) {
+                  try {
+                    final api = OrinocoApi();
+                    final file = File(filePath);
+                    final result = await api.predictCsv(file);
+                    setState(() {
+                      _predictionResult = result;
+                    });
+                    print('Prediction result: $result');
+                  } catch (e) {
+                    print('Error: $e');
+                  }
+                }
               },
             ),
       );
@@ -112,21 +127,42 @@ class _MapScreenState extends State<MapScreen> {
                     onExit: (_) => (pin['onExit'] as void Function())(),
                     child: GestureDetector(
                       onTap: () {
+                        // Example: Pass prediction data to dialog if available
                         showDialog(
                           context: context,
                           builder:
                               (context) => LocationStatsDialog(
                                 location: pin['label'] as String,
-                                weekData: [10, 20, 35, 30, 50, 60, 50],
-                                weekDays: [
-                                  'Lun',
-                                  'Mar',
-                                  'Mié',
-                                  'Jue',
-                                  'Vie',
-                                  'Sáb',
-                                  'Dom',
-                                ],
+                                weekData:
+                                    _predictionResult != null
+                                        ? List<double>.from(
+                                          _predictionResult!['weekData'] ??
+                                              [10, 20, 35, 30, 50, 60, 50],
+                                        )
+                                        : [10, 20, 35, 30, 50, 60, 50],
+                                weekDays:
+                                    _predictionResult != null
+                                        ? List<String>.from(
+                                          _predictionResult!['weekDays'] ??
+                                              [
+                                                'Lun',
+                                                'Mar',
+                                                'Mié',
+                                                'Jue',
+                                                'Vie',
+                                                'Sáb',
+                                                'Dom',
+                                              ],
+                                        )
+                                        : [
+                                          'Lun',
+                                          'Mar',
+                                          'Mié',
+                                          'Jue',
+                                          'Vie',
+                                          'Sáb',
+                                          'Dom',
+                                        ],
                               ),
                         );
                       },
@@ -134,7 +170,7 @@ class _MapScreenState extends State<MapScreen> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           if (pin['hover'] as bool)
-                            HoverLabel(imagePath: pin['imagePath'] as String,),
+                            HoverLabel(imagePath: pin['imagePath'] as String),
                           if (!(pin['hover'] as bool))
                             Icon(
                               Icons.location_on,

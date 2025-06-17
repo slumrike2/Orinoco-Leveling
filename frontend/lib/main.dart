@@ -113,6 +113,16 @@ class _MapScreenState extends State<MapScreen> {
                           builder:
                               (context) => LocationStatsDialog(
                                 location: pin['label'] as String,
+                                weekData: [10, 20, 35, 30, 50, 60, 50],
+                                weekDays: [
+                                  'Lun',
+                                  'Mar',
+                                  'Mié',
+                                  'Jue',
+                                  'Vie',
+                                  'Sáb',
+                                  'Dom',
+                                ],
                               ),
                         );
                       },

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
+import 'csv_upload_dialog.dart';
+import 'hover_label.dart';
+import 'location_stats_dialog.dart';
 
 void main() {
   runApp(const MainApp());
@@ -11,92 +14,6 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(home: MapScreen());
-  }
-}
-
-class CsvUploadDialog extends StatefulWidget {
-  final void Function(String? filePath) onFileSelected;
-  const CsvUploadDialog({super.key, required this.onFileSelected});
-
-  @override
-  State<CsvUploadDialog> createState() => _CsvUploadDialogState();
-}
-
-class _CsvUploadDialogState extends State<CsvUploadDialog> {
-  String? _fileName;
-  String? _filePath;
-  bool _filePicked = false;
-
-  Future<void> _pickFile() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['csv', 'xls', 'xlsx'],
-    );
-    if (result != null && result.files.single.path != null) {
-      setState(() {
-        _fileName = result.files.single.name;
-        _filePath = result.files.single.path;
-        _filePicked = true;
-      });
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Dialog(
-      backgroundColor: Colors.white.withOpacity(0.85),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Cargue el archivo .csv de los niveles de los ríos',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
-                color: Colors.black,
-              ),
-            ),
-            const SizedBox(height: 20),
-            Row(
-              children: [
-                Expanded(
-                  child: ElevatedButton.icon(
-                    onPressed: _pickFile,
-                    icon: const Icon(Icons.upload_file),
-                    label: Text(_fileName ?? 'Seleccionar archivo'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      foregroundColor: Colors.black54,
-                      elevation: 0,
-                      side: const BorderSide(color: Colors.grey),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 10),
-                ElevatedButton(
-                  onPressed:
-                      _filePicked
-                          ? () {
-                            widget.onFileSelected(_filePath);
-                            Navigator.of(context).pop();
-                          }
-                          : null,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.grey.shade400,
-                    foregroundColor: Colors.white,
-                  ),
-                  child: const Text('Enviar'),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
   }
 }
 
@@ -159,7 +76,7 @@ class _MapScreenState extends State<MapScreen> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    if (_hoverAyacucho) _HoverLabel(text: 'PUERTO AYACUCHO'),
+                    if (_hoverAyacucho) HoverLabel(text: 'PUERTO AYACUCHO'),
                     if (!_hoverAyacucho)
                       Icon(Icons.location_on, color: Colors.blue, size: 32),
                   ],
@@ -185,7 +102,7 @@ class _MapScreenState extends State<MapScreen> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    if (_hoverCaicara) _HoverLabel(text: 'CAICARA'),
+                    if (_hoverCaicara) HoverLabel(text: 'CAICARA'),
                     if (!_hoverCaicara)
                       Icon(Icons.location_on, color: Colors.blue, size: 32),
                   ],
@@ -212,7 +129,7 @@ class _MapScreenState extends State<MapScreen> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    if (_hoverBolivar) _HoverLabel(text: 'CIUDAD BOLÍVAR'),
+                    if (_hoverBolivar) HoverLabel(text: 'CIUDAD BOLÍVAR'),
                     if (!_hoverBolivar)
                       Icon(Icons.location_on, color: Colors.blue, size: 32),
                   ],
@@ -238,7 +155,7 @@ class _MapScreenState extends State<MapScreen> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    if (_hoverPalua) _HoverLabel(text: 'PALÚA'),
+                    if (_hoverPalua) HoverLabel(text: 'PALÚA'),
                     if (!_hoverPalua)
                       Icon(Icons.location_on, color: Colors.blue, size: 32),
                   ],
@@ -268,111 +185,6 @@ class _MapScreenState extends State<MapScreen> {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _HoverLabel extends StatelessWidget {
-  final String text;
-  const _HoverLabel({required this.text});
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        decoration: BoxDecoration(
-          color: Colors.black.withOpacity(0.8),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Text(
-          text,
-          style: const TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _LocationDialog extends StatelessWidget {
-  final String nombre;
-  const _LocationDialog({required this.nombre});
-
-  @override
-  Widget build(BuildContext context) {
-    return Dialog(
-      backgroundColor: Colors.black.withOpacity(0.8),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
-        child: Text(
-          nombre,
-          style: const TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontSize: 22,
-            letterSpacing: 1.2,
-          ),
-          textAlign: TextAlign.center,
-        ),
-      ),
-    );
-  }
-}
-
-class LocationStatsDialog extends StatelessWidget {
-  final String location;
-  const LocationStatsDialog({required this.location});
-
-  @override
-  Widget build(BuildContext context) {
-    return Dialog(
-      backgroundColor: Colors.white.withOpacity(0.95),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              location,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 22,
-                color: Colors.black,
-                letterSpacing: 1.2,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 24),
-            ElevatedButton(
-              onPressed: () {},
-              child: const Text('Estadística 1'),
-            ),
-            const SizedBox(height: 12),
-            ElevatedButton(
-              onPressed: () {},
-              child: const Text('Estadística 2'),
-            ),
-            const SizedBox(height: 12),
-            ElevatedButton(
-              onPressed: () {},
-              child: const Text('Estadística 3'),
-            ),
-            const SizedBox(height: 16),
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Cerrar'),
-            ),
-          ],
-        ),
       ),
     );
   }

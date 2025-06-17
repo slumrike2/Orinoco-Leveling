@@ -108,6 +108,12 @@ class MapScreen extends StatefulWidget {
 }
 
 class _MapScreenState extends State<MapScreen> {
+  // Variables para controlar el hover de cada pin
+  bool _hoverAyacucho = false;
+  bool _hoverCaicara = false;
+  bool _hoverBolivar = false;
+  bool _hoverPalua = false;
+
   @override
   void initState() {
     super.initState();
@@ -134,26 +140,73 @@ class _MapScreenState extends State<MapScreen> {
           Positioned.fill(
             child: Image.asset('Assets/fondo.png', fit: BoxFit.cover),
           ),
-          // Pines (ajusta las posiciones según necesites)
+          // Pin: Puerto Ayacucho
           Positioned(
             left: 120,
             top: 420,
-            child: Icon(Icons.location_on, color: Colors.blue, size: 32),
+            child: MouseRegion(
+              onEnter: (_) => setState(() => _hoverAyacucho = true),
+              onExit: (_) => setState(() => _hoverAyacucho = false),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (_hoverAyacucho) _HoverLabel(text: 'PUERTO AYACUCHO'),
+                  if (!_hoverAyacucho)
+                    Icon(Icons.location_on, color: Colors.blue, size: 32),
+                ],
+              ),
+            ),
           ),
+          // Pin: Caicara
           Positioned(
             left: 320,
             top: 350,
-            child: Icon(Icons.location_on, color: Colors.blue, size: 32),
+            child: MouseRegion(
+              onEnter: (_) => setState(() => _hoverCaicara = true),
+              onExit: (_) => setState(() => _hoverCaicara = false),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (_hoverCaicara) _HoverLabel(text: 'CAICARA'),
+                  if (!_hoverCaicara)
+                    Icon(Icons.location_on, color: Colors.blue, size: 32),
+                ],
+              ),
+            ),
           ),
+          // Pin: Ciudad Bolívar
           Positioned(
             left: 500,
             top: 300,
-            child: Icon(Icons.location_on, color: Colors.blue, size: 32),
+            child: MouseRegion(
+              onEnter: (_) => setState(() => _hoverBolivar = true),
+              onExit: (_) => setState(() => _hoverBolivar = false),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (_hoverBolivar) _HoverLabel(text: 'CIUDAD BOLÍVAR'),
+                  if (!_hoverBolivar)
+                    Icon(Icons.location_on, color: Colors.blue, size: 32),
+                ],
+              ),
+            ),
           ),
+          // Pin: Palúa
           Positioned(
             left: 800,
             top: 200,
-            child: Icon(Icons.location_on, color: Colors.blue, size: 32),
+            child: MouseRegion(
+              onEnter: (_) => setState(() => _hoverPalua = true),
+              onExit: (_) => setState(() => _hoverPalua = false),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (_hoverPalua) _HoverLabel(text: 'PALÚA'),
+                  if (!_hoverPalua)
+                    Icon(Icons.location_on, color: Colors.blue, size: 32),
+                ],
+              ),
+            ),
           ),
           // Botón "Predicción general"
           Positioned(
@@ -177,6 +230,59 @@ class _MapScreenState extends State<MapScreen> {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _HoverLabel extends StatelessWidget {
+  final String text;
+  const _HoverLabel({required this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          color: Colors.black.withOpacity(0.8),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Text(
+          text,
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _LocationDialog extends StatelessWidget {
+  final String nombre;
+  const _LocationDialog({required this.nombre});
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      backgroundColor: Colors.black.withOpacity(0.8),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+        child: Text(
+          nombre,
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 22,
+            letterSpacing: 1.2,
+          ),
+          textAlign: TextAlign.center,
+        ),
       ),
     );
   }

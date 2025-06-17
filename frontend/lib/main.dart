@@ -3,6 +3,7 @@ import 'package:file_picker/file_picker.dart';
 import 'csv_upload_dialog.dart';
 import 'hover_label.dart';
 import 'location_stats_dialog.dart';
+import 'dart:ui'; // <-- Add this line
 
 void main() {
   runApp(const MainApp());
@@ -59,8 +60,8 @@ class _MapScreenState extends State<MapScreen> {
           ),
           // Pin: Puerto Ayacucho
           Positioned(
-            left: 120,
-            top: 420,
+            left: 210, // Adjusted for your map
+            top: 710,
             child: MouseRegion(
               onEnter: (_) => setState(() => _hoverAyacucho = true),
               onExit: (_) => setState(() => _hoverAyacucho = false),
@@ -86,8 +87,8 @@ class _MapScreenState extends State<MapScreen> {
           ),
           // Pin: Caicara
           Positioned(
-            left: 320,
-            top: 350,
+            left: 380, // Adjusted for your map
+            top: 470,
             child: MouseRegion(
               onEnter: (_) => setState(() => _hoverCaicara = true),
               onExit: (_) => setState(() => _hoverCaicara = false),
@@ -112,8 +113,8 @@ class _MapScreenState extends State<MapScreen> {
           ),
           // Pin: Ciudad Bolívar
           Positioned(
-            left: 500,
-            top: 300,
+            left: 870, // Adjusted for your map
+            top: 360,
             child: MouseRegion(
               onEnter: (_) => setState(() => _hoverBolivar = true),
               onExit: (_) => setState(() => _hoverBolivar = false),
@@ -139,8 +140,8 @@ class _MapScreenState extends State<MapScreen> {
           ),
           // Pin: Palúa
           Positioned(
-            left: 800,
-            top: 200,
+            left: 1150, // Adjusted for your map
+            top: 280,
             child: MouseRegion(
               onEnter: (_) => setState(() => _hoverPalua = true),
               onExit: (_) => setState(() => _hoverPalua = false),
@@ -163,24 +164,45 @@ class _MapScreenState extends State<MapScreen> {
               ),
             ),
           ),
-          // Botón "Predicción general"
+          // Botón "Predicción general" con glassmorphism
           Positioned(
             right: 40,
             bottom: 40,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.8),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: const Text(
-                'Predicción general',
-                style: TextStyle(
-                  color: Colors.black87,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(16),
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 18, sigmaY: 18),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 18,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.18),
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: Colors.white.withOpacity(0.3),
+                      width: 1.5,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.08),
+                        blurRadius: 24,
+                        offset: const Offset(0, 8),
+                      ),
+                    ],
+                  ),
+                  child: const Text(
+                    'PREDICCIÓN GENERAL',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                      letterSpacing: 1.2,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
                 ),
-                textAlign: TextAlign.center,
               ),
             ),
           ),

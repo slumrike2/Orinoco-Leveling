@@ -1,11 +1,15 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:file_picker/file_picker.dart';
 import 'csv_upload_dialog.dart';
 import 'hover_label.dart';
 import 'location_stats_dialog.dart';
+<<<<<<< HEAD
 import 'dart:ui';
 import 'orinoco_api.dart';
+=======
+import 'general_stats_dialog.dart';
+// <-- Add this line
+>>>>>>> 4c5bbb538dfac78220d7aa6b6c4e2a8b24176ee9
 
 void main() {
   runApp(const MainApp());
@@ -187,40 +191,65 @@ class _MapScreenState extends State<MapScreen> {
               Positioned(
                 right: 40,
                 bottom: 40,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(16),
-                  child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 18, sigmaY: 18),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 24,
-                        vertical: 18,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.18),
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(
-                          color: Colors.white.withOpacity(0.3),
-                          width: 1.5,
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.08),
-                            blurRadius: 24,
-                            offset: const Offset(0, 8),
+                child: GestureDetector(
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder:
+                          (context) => GeneralStatsDialog(
+                            barDataSets: [
+                              [10, 20, 30, 40, 50, 60, 30], // Ejemplo 1
+                              [8, 15, 25, 35, 45, 55, 25], // Ejemplo 2
+                              [12, 18, 28, 38, 48, 58, 28], // Ejemplo 3
+                              [5, 10, 20, 30, 40, 50, 20], // Ejemplo 4
+                            ],
+                            lineDataSets: [
+                              [10, 20, 30, 40, 50, 60, 30],
+                              [8, 15, 25, 35, 45, 55, 25],
+                              [12, 18, 28, 38, 48, 58, 28],
+                              [5, 10, 20, 30, 40, 50, 20],
+                            ],
+                            labels: [
+                              'Lun',
+                              'Mar',
+                              'Mié',
+                              'Jue',
+                              'Vie',
+                              'Sáb',
+                              'Dom',
+                            ],
+                            barNames: [
+                              'Puerto Ayacucho',
+                              'Caicara',
+                              'Ciudad Bolívar',
+                              'Palúa',
+                            ],
+                            lineNames: [
+                              'Puerto Ayacucho',
+                              'Caicara',
+                              'Ciudad Bolívar',
+                              'Palúa',
+                            ],
                           ),
-                        ],
+                    );
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.8),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const Text(
+                      'Predicción general',
+                      style: TextStyle(
+                        color: Colors.black87,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
                       ),
-                      child: const Text(
-                        'PREDICCIÓN GENERAL',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                          letterSpacing: 1.2,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
+                      textAlign: TextAlign.center,
                     ),
                   ),
                 ),

@@ -114,6 +114,14 @@ class _MapScreenState extends State<MapScreen> {
   bool _hoverBolivar = false;
   bool _hoverPalua = false;
 
+  // Coordenadas relativas (0.0 - 1.0) para cada pin
+  final Map<String, Offset> _pinPositions = {
+    'ayacucho': Offset(0.13, 0.75), // left: 120, top: 420 (aprox)
+    'caicara': Offset(0.35, 0.62),  // left: 320, top: 350
+    'bolivar': Offset(0.55, 0.53),  // left: 500, top: 300
+    'palua': Offset(0.88, 0.35),    // left: 800, top: 200
+  };
+
   @override
   void initState() {
     super.initState();
@@ -134,102 +142,117 @@ class _MapScreenState extends State<MapScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          // Imagen de fondo
-          Positioned.fill(
-            child: Image.asset('Assets/fondo.png', fit: BoxFit.cover),
-          ),
-          // Pin: Puerto Ayacucho
-          Positioned(
-            left: 120,
-            top: 420,
-            child: MouseRegion(
-              onEnter: (_) => setState(() => _hoverAyacucho = true),
-              onExit: (_) => setState(() => _hoverAyacucho = false),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (_hoverAyacucho) _HoverLabel(text: 'PUERTO AYACUCHO'),
-                  if (!_hoverAyacucho)
-                    Icon(Icons.location_on, color: Colors.blue, size: 32),
-                ],
-              ),
-            ),
-          ),
-          // Pin: Caicara
-          Positioned(
-            left: 320,
-            top: 350,
-            child: MouseRegion(
-              onEnter: (_) => setState(() => _hoverCaicara = true),
-              onExit: (_) => setState(() => _hoverCaicara = false),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (_hoverCaicara) _HoverLabel(text: 'CAICARA'),
-                  if (!_hoverCaicara)
-                    Icon(Icons.location_on, color: Colors.blue, size: 32),
-                ],
-              ),
-            ),
-          ),
-          // Pin: Ciudad Bolívar
-          Positioned(
-            left: 500,
-            top: 300,
-            child: MouseRegion(
-              onEnter: (_) => setState(() => _hoverBolivar = true),
-              onExit: (_) => setState(() => _hoverBolivar = false),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (_hoverBolivar) _HoverLabel(text: 'CIUDAD BOLÍVAR'),
-                  if (!_hoverBolivar)
-                    Icon(Icons.location_on, color: Colors.blue, size: 32),
-                ],
-              ),
-            ),
-          ),
-          // Pin: Palúa
-          Positioned(
-            left: 800,
-            top: 200,
-            child: MouseRegion(
-              onEnter: (_) => setState(() => _hoverPalua = true),
-              onExit: (_) => setState(() => _hoverPalua = false),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (_hoverPalua) _HoverLabel(text: 'PALÚA'),
-                  if (!_hoverPalua)
-                    Icon(Icons.location_on, color: Colors.blue, size: 32),
-                ],
-              ),
-            ),
-          ),
-          // Botón "Predicción general"
-          Positioned(
-            right: 40,
-            bottom: 40,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.8),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: const Text(
-                'Predicción general',
-                style: TextStyle(
-                  color: Colors.black87,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          return Stack(
+            children: [
+              // Imagen de fondo (BoxFit.contain para que no se recorte)
+              Positioned.fill(
+                child: Image.asset(
+                  'Assets/fondo.png',
+                  fit: BoxFit.contain,
                 ),
-                textAlign: TextAlign.center,
               ),
-            ),
-          ),
-        ],
+              // Pin: Puerto Ayacucho
+              Align(
+                alignment: Alignment(
+                  -0.74, // (0.13*2-1)
+                  0.5,   // (0.75*2-1)
+                ),
+                child: MouseRegion(
+                  onEnter: (_) => setState(() => _hoverAyacucho = true),
+                  onExit: (_) => setState(() => _hoverAyacucho = false),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (_hoverAyacucho) _HoverLabel(text: 'PUERTO AYACUCHO'),
+                      if (!_hoverAyacucho)
+                        Icon(Icons.location_on, color: Colors.blue, size: 32),
+                    ],
+                  ),
+                ),
+              ),
+              // Pin: Caicara
+              Align(
+                alignment: Alignment(
+                  -0.3, // (0.35*2-1)
+                  0.24, // (0.62*2-1)
+                ),
+                child: MouseRegion(
+                  onEnter: (_) => setState(() => _hoverCaicara = true),
+                  onExit: (_) => setState(() => _hoverCaicara = false),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (_hoverCaicara) _HoverLabel(text: 'CAICARA'),
+                      if (!_hoverCaicara)
+                        Icon(Icons.location_on, color: Colors.blue, size: 32),
+                    ],
+                  ),
+                ),
+              ),
+              // Pin: Ciudad Bolívar
+              Align(
+                alignment: Alignment(
+                  0.1, // (0.55*2-1)
+                  0.06, // (0.53*2-1)
+                ),
+                child: MouseRegion(
+                  onEnter: (_) => setState(() => _hoverBolivar = true),
+                  onExit: (_) => setState(() => _hoverBolivar = false),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (_hoverBolivar) _HoverLabel(text: 'CIUDAD BOLÍVAR'),
+                      if (!_hoverBolivar)
+                        Icon(Icons.location_on, color: Colors.blue, size: 32),
+                    ],
+                  ),
+                ),
+              ),
+              // Pin: Palúa
+              Align(
+                alignment: Alignment(
+                  0.76, // (0.88*2-1)
+                  -0.3, // (0.35*2-1)
+                ),
+                child: MouseRegion(
+                  onEnter: (_) => setState(() => _hoverPalua = true),
+                  onExit: (_) => setState(() => _hoverPalua = false),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (_hoverPalua) _HoverLabel(text: 'PALÚA'),
+                      if (!_hoverPalua)
+                        Icon(Icons.location_on, color: Colors.blue, size: 32),
+                    ],
+                  ),
+                ),
+              ),
+              // Botón "Predicción general"
+              Positioned(
+                right: 40,
+                bottom: 40,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.8),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Text(
+                    'Predicción general',
+                    style: TextStyle(
+                      color: Colors.black87,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }

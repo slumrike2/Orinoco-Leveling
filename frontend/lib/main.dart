@@ -147,13 +147,23 @@ class _MapScreenState extends State<MapScreen> {
             child: MouseRegion(
               onEnter: (_) => setState(() => _hoverAyacucho = true),
               onExit: (_) => setState(() => _hoverAyacucho = false),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (_hoverAyacucho) _HoverLabel(text: 'PUERTO AYACUCHO'),
-                  if (!_hoverAyacucho)
-                    Icon(Icons.location_on, color: Colors.blue, size: 32),
-                ],
+              child: GestureDetector(
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder:
+                        (context) =>
+                            LocationStatsDialog(location: 'PUERTO AYACUCHO'),
+                  );
+                },
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (_hoverAyacucho) _HoverLabel(text: 'PUERTO AYACUCHO'),
+                    if (!_hoverAyacucho)
+                      Icon(Icons.location_on, color: Colors.blue, size: 32),
+                  ],
+                ),
               ),
             ),
           ),
@@ -164,13 +174,22 @@ class _MapScreenState extends State<MapScreen> {
             child: MouseRegion(
               onEnter: (_) => setState(() => _hoverCaicara = true),
               onExit: (_) => setState(() => _hoverCaicara = false),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (_hoverCaicara) _HoverLabel(text: 'CAICARA'),
-                  if (!_hoverCaicara)
-                    Icon(Icons.location_on, color: Colors.blue, size: 32),
-                ],
+              child: GestureDetector(
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder:
+                        (context) => LocationStatsDialog(location: 'CAICARA'),
+                  );
+                },
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (_hoverCaicara) _HoverLabel(text: 'CAICARA'),
+                    if (!_hoverCaicara)
+                      Icon(Icons.location_on, color: Colors.blue, size: 32),
+                  ],
+                ),
               ),
             ),
           ),
@@ -181,13 +200,23 @@ class _MapScreenState extends State<MapScreen> {
             child: MouseRegion(
               onEnter: (_) => setState(() => _hoverBolivar = true),
               onExit: (_) => setState(() => _hoverBolivar = false),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (_hoverBolivar) _HoverLabel(text: 'CIUDAD BOLÍVAR'),
-                  if (!_hoverBolivar)
-                    Icon(Icons.location_on, color: Colors.blue, size: 32),
-                ],
+              child: GestureDetector(
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder:
+                        (context) =>
+                            LocationStatsDialog(location: 'CIUDAD BOLÍVAR'),
+                  );
+                },
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (_hoverBolivar) _HoverLabel(text: 'CIUDAD BOLÍVAR'),
+                    if (!_hoverBolivar)
+                      Icon(Icons.location_on, color: Colors.blue, size: 32),
+                  ],
+                ),
               ),
             ),
           ),
@@ -198,13 +227,22 @@ class _MapScreenState extends State<MapScreen> {
             child: MouseRegion(
               onEnter: (_) => setState(() => _hoverPalua = true),
               onExit: (_) => setState(() => _hoverPalua = false),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (_hoverPalua) _HoverLabel(text: 'PALÚA'),
-                  if (!_hoverPalua)
-                    Icon(Icons.location_on, color: Colors.blue, size: 32),
-                ],
+              child: GestureDetector(
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder:
+                        (context) => LocationStatsDialog(location: 'PALÚA'),
+                  );
+                },
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (_hoverPalua) _HoverLabel(text: 'PALÚA'),
+                    if (!_hoverPalua)
+                      Icon(Icons.location_on, color: Colors.blue, size: 32),
+                  ],
+                ),
               ),
             ),
           ),
@@ -282,6 +320,58 @@ class _LocationDialog extends StatelessWidget {
             letterSpacing: 1.2,
           ),
           textAlign: TextAlign.center,
+        ),
+      ),
+    );
+  }
+}
+
+class LocationStatsDialog extends StatelessWidget {
+  final String location;
+  const LocationStatsDialog({required this.location});
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      backgroundColor: Colors.white.withOpacity(0.95),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              location,
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 22,
+                color: Colors.black,
+                letterSpacing: 1.2,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 24),
+            ElevatedButton(
+              onPressed: () {},
+              child: const Text('Estadística 1'),
+            ),
+            const SizedBox(height: 12),
+            ElevatedButton(
+              onPressed: () {},
+              child: const Text('Estadística 2'),
+            ),
+            const SizedBox(height: 12),
+            ElevatedButton(
+              onPressed: () {},
+              child: const Text('Estadística 3'),
+            ),
+            const SizedBox(height: 16),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Cerrar'),
+            ),
+          ],
         ),
       ),
     );

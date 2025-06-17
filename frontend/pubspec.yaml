@@ -22,3 +22,7 @@ flutter:
   uses-material-design: true
   assets:
     - Assets/fondo.png
+    - Assets/paluaimg.png
+    - Assets/cdbolivarimg.png
+    - Assets/caicaraimg.png
+    - Assets/ptoayacuchoimg.png

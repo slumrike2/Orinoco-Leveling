@@ -64,6 +64,7 @@ class _MapScreenState extends State<MapScreen> {
               'top': 0.78, // 74% from the top
               'hover': _hoverAyacucho,
               'label': 'PUERTO AYACUCHO',
+              'imagePath': 'Assets/ptoayacuchoimg.png',
               'onEnter': () => setState(() => _hoverAyacucho = true),
               'onExit': () => setState(() => _hoverAyacucho = false),
             },
@@ -72,6 +73,7 @@ class _MapScreenState extends State<MapScreen> {
               'top': 0.49,
               'hover': _hoverCaicara,
               'label': 'CAICARA',
+              'imagePath': 'Assets/caicaraimg.png',
               'onEnter': () => setState(() => _hoverCaicara = true),
               'onExit': () => setState(() => _hoverCaicara = false),
             },
@@ -80,6 +82,7 @@ class _MapScreenState extends State<MapScreen> {
               'top': 0.39,
               'hover': _hoverBolivar,
               'label': 'CIUDAD BOLÍVAR',
+              'imagePath': 'Assets/cdbolivarimg.png',
               'onEnter': () => setState(() => _hoverBolivar = true),
               'onExit': () => setState(() => _hoverBolivar = false),
             },
@@ -88,6 +91,7 @@ class _MapScreenState extends State<MapScreen> {
               'top': 0.32,
               'hover': _hoverPalua,
               'label': 'PALÚA',
+              'imagePath': 'Assets/paluaimg.png',
               'onEnter': () => setState(() => _hoverPalua = true),
               'onExit': () => setState(() => _hoverPalua = false),
             },
@@ -130,7 +134,7 @@ class _MapScreenState extends State<MapScreen> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           if (pin['hover'] as bool)
-                            HoverLabel(text: pin['label'] as String),
+                            HoverLabel(imagePath: pin['imagePath'] as String,),
                           if (!(pin['hover'] as bool))
                             Icon(
                               Icons.location_on,

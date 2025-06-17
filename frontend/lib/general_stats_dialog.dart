@@ -14,8 +14,8 @@ class GeneralStatsDialog extends StatefulWidget {
     required this.labels,
     required this.barNames,
     required this.lineNames,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   State<GeneralStatsDialog> createState() => _GeneralStatsDialogState();

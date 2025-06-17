@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:file_picker/file_picker.dart';
 import 'csv_upload_dialog.dart';
 import 'hover_label.dart';
 import 'location_stats_dialog.dart';
 import 'general_stats_dialog.dart';
-import 'dart:ui'; // <-- Add this line
+// <-- Add this line
 
 void main() {
   runApp(const MainApp());

@@ -10,8 +10,8 @@ class LocationStatsDialog extends StatefulWidget {
     required this.location,
     required this.weekData,
     required this.weekDays,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   State<LocationStatsDialog> createState() => _LocationStatsDialogState();

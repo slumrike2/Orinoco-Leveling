@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class HoverLabel extends StatelessWidget {
   final String text;
-  const HoverLabel({required this.text});
+  const HoverLabel({super.key, required this.text});
 
   @override
   Widget build(BuildContext context) {

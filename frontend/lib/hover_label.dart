@@ -1,28 +1,17 @@
 import 'package:flutter/material.dart';
 
 class HoverLabel extends StatelessWidget {
-  final String text;
-  const HoverLabel({required this.text});
+  final String? imagePath;
+
+  const HoverLabel({this.imagePath, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    if (imagePath == null) return const SizedBox.shrink();
     return Material(
       color: Colors.transparent,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        decoration: BoxDecoration(
-          color: Colors.black.withOpacity(0.8),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Text(
-          text,
-          style: const TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
-          ),
-        ),
-      ),
+      elevation: 0,
+      child: Image.asset(imagePath!, width: 160, fit: BoxFit.cover),
     );
   }
 }

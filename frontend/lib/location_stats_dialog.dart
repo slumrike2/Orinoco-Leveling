@@ -301,7 +301,8 @@ class _PieChartWidget extends StatelessWidget {
                     ),
                     const SizedBox(width: 8),
                     Text(
-                      labels[i],
+                      // Solo mostrar el nombre del día, sin salto de línea ni fecha
+                      labels[i].split('\n')[0],
                       style: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
